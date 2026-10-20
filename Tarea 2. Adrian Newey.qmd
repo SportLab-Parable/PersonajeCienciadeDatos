@@ -1,0 +1,216 @@
+---
+title: "Adrian Newey: La revolución aerodinámica y el análisis de datos en la Fórmula 1"
+subtitle: "Simulación y telemetría"
+author: 
+  - "Elena Corbalán"
+  - "Sergio Martín"
+  - "Igor Asenjo"
+format: 
+  html:
+    theme: cosmo
+    toc: true
+    toc-title: "Índice"
+    toc-depth: 2
+    number-sections: true
+    embed-resources: true
+    header-includes: |
+      <style>
+      body {
+        text-align: justify;
+      }
+      </style>
+jupyter: python3
+---
+
+
+## Presentación
+
+**Personaje histórico:** Adrian Newey.  
+**Deporte:** Automovilismo (Fórmula 1, IndyCar, IMSA).  
+**Ámbito analítico:** Simulación aerodinámica, telemetría y algoritmos de control de chasis.  
+
+![Adrian Newey](https://static.motor.es/fotos-noticias/2026/07/fracasos-newey-f1-similitudes-diferencias-mclaren-mp418-aston-martin-amr26-2026115297-1784194058_6.jpg)
+
+
+## Contexto: La F1 empírica antes de los datos
+
+En las décadas de 1970 y 1980, el diseño de monoplazas operaba bajo un paradigma empírico basado en intuición mecánica. Las pruebas se fundamentaban en el ensayo y error sin validación cuantitativa sólida. La toma de decisiones dependía casi en exclusiva del cronómetro manual y de las impresiones subjetivas del piloto, sin telemetría cruzada. 
+
+La disciplina de la aerodinámica avanzada (como el efecto suelo) generaba un margen de error enorme entre el laboratorio y la pista. Los vehículos carecían de estabilidad aerodinámica predictiva, resultando frecuentemente en colapsos de carga (*stall*) impredecibles bajo condiciones de guiñada (*yaw*) o cabeceo (*pitch*).
+
+
+## Biografía Breve: De la aeronáutica a la pista
+
+Adrian Newey (nacido en 1958) es un ingeniero británico graduado en Aeronáutica y Astronáutica por la Universidad de Southampton, donde se especializó en aerodinámica de efecto suelo. 
+
+Tras su paso inicial por Fittipaldi y March, Newey transformó el rol del diseñador de coches al integrar la recolección masiva de datos experimentales del túnel de viento con la ingeniería de pista. Es considerado el ingeniero más laureado de la historia, acumulando más de 20 campeonatos del mundo a través de sus diseños para Williams, McLaren y Red Bull.
+
+
+## Contribución Principal: Análisis y Validación Cuantitativa
+
+La aportación técnica fundamental de Newey al *Sports Analytics* fue la estandarización del método científico en el diseño de monoplazas:
+
+* **Mapeo fluidodinámico:** Implementó la técnica *Flow Vis* (pintura fluorescente) y sensores de presión estática para transformar los flujos de aire en conjuntos de datos visuales y numéricos interpretables.
+* **Metodología A-B-A en pista:** Instauró protocolos estadísticos estrictos de prueba en los circuitos para aislar variables mecánicas de factores de confusión externos (como desgaste de gomas o temperatura de asfalto).
+* **Control algorítmico del vehículo:** Lideró la convergencia entre aerodinámica, sensores en tiempo real y *software* de control mediante el desarrollo de las primeras suspensiones activas fiables.
+
+```{python}
+#| echo: false
+#| eval: true
+
+from IPython.display import HTML, display
+
+html_code = """
+<style>
+.slider-container {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  margin: 20px auto;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  line-height: 0;
+}
+.slider-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.img-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  clip-path: inset(0 50% 0 0);
+}
+.slider-range {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-appearance: none;
+  background: transparent;
+  outline: none;
+  margin: 0;
+  z-index: 10;
+}
+.slider-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 4px;
+  height: 600px;
+  background: #ffffff;
+  cursor: ew-resize;
+  box-shadow: 0 0 8px rgba(0,0,0,0.8);
+}
+.slider-range::-moz-range-thumb {
+  width: 4px;
+  height: 600px;
+  background: #ffffff;
+  cursor: ew-resize;
+  box-shadow: 0 0 8px rgba(0,0,0,0.8);
+  border: none;
+}
+.labels-container {
+  position: absolute;
+  bottom: 15px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 30px;
+  box-sizing: border-box;
+  pointer-events: none;
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+  z-index: 5;
+}
+</style>
+
+<div class="slider-container">
+  <img src="https://hips.hearstapps.com/es.h-cdn.co/cades/contenidos/60899/williams-renault-fw14b-mansell-01.jpg" class="slider-img" alt="Williams FW14B">
+  
+  <img src="/home/igor91ac/Descargas/Gemini_Generated_Image_ui1vo6ui1vo6ui1v.jpeg" class="img-overlay" id="imgOverlay" alt="Red Bull RB17">
+  
+  <div class="labels-container">
+    <span>Red Bull RB17</span>
+    <span>Williams FW14B</span>
+  </div>
+
+  <input type="range" min="0" max="100" value="50" class="slider-range" id="sliderRange">
+</div>
+
+<script>
+  const slider = document.getElementById("sliderRange");
+  const overlay = document.getElementById("imgOverlay");
+
+  slider.addEventListener("input", function() {
+    const clipVal = 100 - slider.value;
+    overlay.style.clipPath = `inset(0 ${clipVal}% 0 0)`;
+  });
+</script>
+"""
+
+display(HTML(html_code))
+```
+
+
+## Impacto en el Deporte I: Empaquetamiento y Aerodinámica
+
+Newey cambió radicalmente la morfología de la F1 al tratar el coche como un sistema de datos holístico, donde masa y dinámica de fluidos interactúan sin descanso.
+
+Con el **March 881 (Leyton House)**, demostró empíricamente que la reducción drástica del espacio interior mejoraba el flujo volumétrico. Introdujo el chasis en forma de "V" y elevó la caja de pedales para independizar el flujo del alerón delantero del morro. Las tolerancias analíticas eran tan extremas que requirieron alteraciones asimétricas del monocasco en fibra de carbono simplemente para que los nudillos de pilotos como Ivan Capelli pudieran accionar la caja de cambios.
+
+
+## Impacto en el Deporte II: La revolución del algoritmo (FW14B)
+
+El **Williams FW14B** (1992) representa el punto de inflexión definitivo donde el *software* dominó al *hardware*. Newey integró un sistema de suspensión activa controlada por una centralita electrónica que bombeaba fluido a actuadores hidráulicos mediante válvulas proporcionales Moog. 
+
+Este algoritmo absorbía los datos de las fuerzas G laterales y longitudinales, corrigiendo en milisegundos la plataforma del coche para mantener una altura de manejo (*ride-height*) óptima en todo momento. Esta innovación analítica anuló la transferencia de masas y reescribió las reglas del deporte, logrando un dominio tan abrumador que la FIA terminó prohibiendo las ayudas electrónicas.
+
+
+## Impacto en el Deporte III: Los límites de la simulación
+
+El análisis de datos no está exento de colapsos cuando los modelos teóricos difieren de la física real. 
+
+* **Williams FW16 (1994):** Tras la prohibición algorítmica, el modelo pasivo sufrió de separación de flujos. La constricción entre el suelo y los pontones frontales al frenar causaba un *stall* violento del difusor trasero, evidenciando las limitaciones de un diseño que dependía de la corrección informática abolida.
+* **McLaren MP4-18 y Red Bull RB3:** Proyectos posteriores demostraron que el modelado extremo en CFD (como el chasis de "doble quilla" o cajas de cambio ultra-compactas) podía generar fallos catastróficos no previstos en los simuladores, como la ruptura prematura de vórtices bajo guiñada, incendios sistémicos por estrés térmico y fricción de transmisión.
+
+
+## Influencia en el Análisis Moderno
+
+El legado de Newey sentó los pilares del *Sports Analytics* actual en el automovilismo (Ingeniería Predictiva):
+
+::: {.columns}
+
+::: {.column width="55%"}
+* **CFD y Gemelos Digitales:** Precursor absoluto de las dinámicas de fluidos computacionales al exprimir la correlación matemática en el túnel de viento.
+* **Telemetría y Set-up dinámico:** Incorporó ajustes en el volante para que el piloto optimizara hiperparámetros (reparto de pesos, altura) en tiempo real, transformándolo en un analista activo.
+* **Estrategia Estocástica Moderna:** Hoy en día, estructuras como Aston Martin utilizan la base teórica de validación de Newey para ejecutar simulaciones de Montecarlo. Si los datos del túnel fallan en correlacionarse con la carga real, los equipos lo compensan analíticamente.
+:::
+::: {.column width="5%"}
+:::
+::: {.column width="40%"}
+![The aerodynamics of an inverted wing and a rotating wheel in ground effect](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhCPvoNpg6Vu4Utmc4XtNaiWsCNOPXcnR_T3Ee3px9VN0lg30TTypGuc8Ydh2i0RVwyOxPSeyZboT-5YGNUnaubek5ri1j2S_SX1Rcb6Eyc-TwLCVFL1_UWtdMw12QBHnhtztP9/s1600/Average+vs+instantaneous.jpg){width=100% fig-align="center"}
+
+:::
+
+:::
+
+## Ideas que siguen vigentes: El Sesgo de Datos (*Data Bias*)
+
+Uno de los postulados históricos de Newey de mayor vigencia en cualquier campo de la ciencia de datos es **el peligro del sobreajuste y la calibración instrumental**. 
+
+En Leyton House (1989), el equipo diseñó un coche que simulaba ser perfecto, pero en pista era inestable. Mediante un riguroso proceso de aislamiento de variables, Newey descubrió que las planchas de madera bajo la cinta rodante del túnel de viento se habían combado, generando un diferencial de presión artificial. Este sesgo en los datos de entrenamiento (*Data Bias*) demostró que un algoritmo es tan bueno como la pureza de la información que lo alimenta. Hoy en día, la estricta calibración de herramientas para garantizar la "correlación pista-simulador" es la ley fundamental de la Fórmula 1.
+
+
+## Cierre y Reflexión Final
+
+Adrian Newey demostró que la ventaja competitiva en el deporte del motor no reside en corazonadas, sino en la capacidad para adquirir, depurar y correlacionar miles de puntos de datos de ingeniería dinámica. Al fusionar el rigor metodológico aeronáutico con el diseño de chasis, lideró la transformación de la Fórmula 1 hacia la era de la inteligencia predictiva.
+
+> **"El verdadero éxito no está en los megabytes de simulación que generas, sino en asegurar que la pureza de esos datos sobreviva a la fricción de la realidad para darle al piloto un límite explotable."**
