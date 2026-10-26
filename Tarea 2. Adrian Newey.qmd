@@ -6,19 +6,41 @@ author:
   - "Sergio Martín"
   - "Igor Asenjo"
 format: 
-  html:
-    theme: cosmo
+  revealjs:
+    theme: simple
+    transition: slide
+    center: false          # Alinea el contenido al inicio (arriba) en lugar de centrarlo verticalmente
+    min-scale: 0.2
+    max-scale: 2.0
+    embed-resources: true
     toc: true
     toc-title: "Índice"
-    toc-depth: 2
-    number-sections: true
-    embed-resources: true
-    header-includes: |
-      <style>
-      body {
-        text-align: justify;
-      }
-      </style>
+    toc-depth: 1
+    include-in-header: 
+      text: |
+        <style>
+        /* Encabezados siempre fijados arriba */
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+          color: #006F62 !important; 
+          font-weight: bold;
+          margin-top: 0 !important;
+          padding-top: 0 !important;
+          margin-bottom: 0.8em !important;
+        }
+        /* Color verde para las negritas */
+        .reveal strong, .reveal b {
+          color: #008f7e !important;
+        }
+        /* Ajuste fluido del cuerpo de texto */
+        .reveal .slides section {
+          font-size: clamp(0.9rem, 2.2vh, 1.8rem) !important;
+          padding-top: 1rem !important;
+        }
+        .reveal p, .reveal li {
+          color: #333333;
+          margin-bottom: 0.5em;
+        }
+        </style>
 jupyter: python3
 ---
 
@@ -29,7 +51,7 @@ jupyter: python3
 **Deporte:** Automovilismo (Fórmula 1, IndyCar, IMSA).  
 **Ámbito analítico:** Simulación aerodinámica, telemetría y algoritmos de control de chasis.  
 
-![Adrian Newey](https://static.motor.es/fotos-noticias/2026/07/fracasos-newey-f1-similitudes-diferencias-mclaren-mp418-aston-martin-amr26-2026115297-1784194058_6.jpg)
+![](https://static.motor.es/fotos-noticias/2026/07/fracasos-newey-f1-similitudes-diferencias-mclaren-mp418-aston-martin-amr26-2026115297-1784194058_6.jpg)
 
 
 ## Contexto: La F1 empírica antes de los datos
