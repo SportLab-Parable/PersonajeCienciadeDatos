@@ -1,15 +1,15 @@
 ---
 title: "Adrian Newey: La revolución aerodinámica y el análisis de datos en la Fórmula 1"
-subtitle: "Simulación y telemetría"
+
 author: 
-  - "Elena Corbalán"
-  - "Sergio Martín"
-  - "Igor Asenjo"
+- "Elena Corbalán    "
+- "    Sergio Martín    "
+- "    Igor Asenjo"
 format: 
   revealjs:
     theme: simple
     transition: slide
-    center: false          # Alinea el contenido al inicio (arriba) en lugar de centrarlo verticalmente
+    center: false
     min-scale: 0.2
     max-scale: 2.0
     embed-resources: true
@@ -19,7 +19,6 @@ format:
     include-in-header: 
       text: |
         <style>
-        /* Encabezados siempre fijados arriba */
         .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
           color: #006F62 !important; 
           font-weight: bold;
@@ -27,11 +26,9 @@ format:
           padding-top: 0 !important;
           margin-bottom: 0.8em !important;
         }
-        /* Color verde para las negritas */
         .reveal strong, .reveal b {
           color: #008f7e !important;
         }
-        /* Ajuste fluido del cuerpo de texto */
         .reveal .slides section {
           font-size: clamp(0.9rem, 2.2vh, 1.8rem) !important;
           padding-top: 1rem !important;
@@ -39,6 +36,7 @@ format:
         .reveal p, .reveal li {
           color: #333333;
           margin-bottom: 0.5em;
+          text-align: justify;
         }
         </style>
 jupyter: python3
@@ -56,16 +54,26 @@ jupyter: python3
 
 ## Contexto: La F1 empírica antes de los datos
 
-En las décadas de 1970 y 1980, el diseño de monoplazas operaba bajo un paradigma empírico basado en intuición mecánica. Las pruebas se fundamentaban en el ensayo y error sin validación cuantitativa sólida. La toma de decisiones dependía casi en exclusiva del cronómetro manual y de las impresiones subjetivas del piloto, sin telemetría cruzada. 
+Durante los años 70 y gran parte de los 80, el diseño dependía en gran medida de la **genialidad e intuición** de diseñadores individuales como Colin Chapman o el propio Adrian Newey en sus inicios, bajo un método dominante de _construir, probar y corregir_. Las decisiones sobre la puesta a punto se tomaban basándose principalmente en los tiempos por vuelta marcados a mano y en el feedback subjetivo del piloto. Asimismo, no existía el análisis de datos en tiempo real ni la capacidad de cruzar variables en un ordenador para comparar, por ejemplo, la aceleración lateral con la presión de freno y la altura del chasis.
 
-La disciplina de la aerodinámica avanzada (como el efecto suelo) generaba un margen de error enorme entre el laboratorio y la pista. Los vehículos carecían de estabilidad aerodinámica predictiva, resultando frecuentemente en colapsos de carga (*stall*) impredecibles bajo condiciones de guiñada (*yaw*) o cabeceo (*pitch*).
+
+Mientras que los años 70 fueron casi 100% empíricos y la aerodinámica se probaba directamente en pista añadiendo o quitando piezas sin sensores digitales a bordo, la década de 1980 marcó el inicio del cambio de paradigma. A mediados de esa década, escuderías como Williams o McLaren empezaron a instalar dataloggers primitivos que almacenaban información en memoria interna para descargarla por cable en boxes, iniciando así la medición cuantitativa de parámetros básicos como revoluciones por minuto, presiones, temperaturas y velocidad de las ruedas.
 
 
 ## Biografía Breve: De la aeronáutica a la pista
 
-Adrian Newey (nacido en 1958) es un ingeniero británico graduado en Aeronáutica y Astronáutica por la Universidad de Southampton, donde se especializó en aerodinámica de efecto suelo. 
+Adrian Newey (nacido en 1958) es un ingeniero británico graduado en Aeronáutica y Astronáutica por la Universidad de Southampton, donde se especializó en aerodinámica de efecto suelo. Es considerado una de las figuras más laureadas de la historia del automovilismo y el diseñador que transformó el rol de la ingeniería al **integrar la recolección masiva de datos experimentales del túnel de viento con la puesta a punto en pista**.
 
-Tras su paso inicial por Fittipaldi y March, Newey transformó el rol del diseñador de coches al integrar la recolección masiva de datos experimentales del túnel de viento con la ingeniería de pista. Es considerado el ingeniero más laureado de la historia, acumulando más de 20 campeonatos del mundo a través de sus diseños para Williams, McLaren y Red Bull.
+Su carrera despegó en los años 80. Tras sus primeros pasos en Fittipaldi y en March IndyCar —donde llegó a ganar las 500 Millas de Inianápolis en 1983—, dio el salto a la Fórmula 1 con FORCE. Posteriormente regresó a March (luego Leyton House), donde fue fuertemente criticado por dar una importancia excesiva a la aerodinámica frente a otros componentes, un enfoque pionero que le costó incluso ser despedido.
+
+Williams apostó por su talento ofreciéndole un mayor presupuesto y recursos. Conquistó cuatro mundiales de pilotos y cuatro de constructores con figuras como Nigel Mansell (1992), Alain Prost (1993), Damon Hill (1996) y Jacques Villeneuve (1997). En esta etapa también vivió uno de los momentos más trágicos de su carrera con el fallecimiento de Ayrton Senna en el GP de San Marino de 1994.
+
+Consagrado como el mejor diseñador del momento, se unió a McLaren para construir el monoplaza que llevó a Mika Häkkinen a ganar dos campeonatos de pilotos consecutivos en 1998 y 1999.
+
+Llegó a la escudería Red Bull en 2006 y, a partir de 2009, **revolucionó el diseño de sus coches**. Lideró la era dorada de Sebastian Vettel con cuatro dobles coronas consecutivas (2010-2013) y sentó las bases para el posterior dominio de Max Verstappen a partir de 2021, batiendo récords absolutos de puntos en una temporada tanto con Vettel (2011) como con Verstappen (2023).
+
+
+Tras 18 años y **25 títulos mundiales** combinados (13 de Pilotos y 12 de Constructores) repartidos entre Williams, McLaren y Red Bull, Newey cerró su fructífera etapa en la escudería de la bebida energética para iniciar un nuevo capítulo en Aston Martin.
 
 
 ## Contribución Principal: Análisis y Validación Cuantitativa
@@ -80,104 +88,146 @@ La aportación técnica fundamental de Newey al *Sports Analytics* fue la estand
 #| echo: false
 #| eval: true
 
+import base64, mimetypes
+from pathlib import Path
 from IPython.display import HTML, display
 
-html_code = """
+def img_to_data_uri(path):
+    p = Path(path).expanduser()
+    mime = mimetypes.guess_type(p.name)[0] or "image/jpeg"
+    return f"data:{mime};base64,{base64.b64encode(p.read_bytes()).decode()}"
+
+img_left  = img_to_data_uri("/home/igor91ac/Descargas/Gemini_Generated_Image_ui1vo6ui1vo6ui1v.jpeg")
+img_right = "https://hips.hearstapps.com/es.h-cdn.co/cades/contenidos/60899/williams-renault-fw14b-mansell-01.jpg"
+
+html_template = """
 <style>
-.slider-container {
+.ba-container {
+  --pos: 50%;
   position: relative;
   width: 100%;
   max-width: 900px;
+  aspect-ratio: 16 / 9;
   margin: 20px auto;
   overflow: hidden;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  line-height: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+  cursor: ew-resize;
 }
-.slider-img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-.img-overlay {
+.ba-img {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  clip-path: inset(0 50% 0 0);
+  display: block;
+  pointer-events: none;
+  -webkit-user-drag: none;
 }
-.slider-range {
+.ba-overlay {
+  clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+}
+.ba-divider {
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  -webkit-appearance: none;
-  background: transparent;
+  bottom: 0;
+  left: var(--pos);
+  width: 4px;
+  transform: translateX(-50%);
+  background: #fff;
+  box-shadow: 0 0 8px rgba(0,0,0,0.8);
+  z-index: 6;
   outline: none;
-  margin: 0;
-  z-index: 10;
 }
-.slider-range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 4px;
-  height: 600px;
-  background: #ffffff;
-  cursor: ew-resize;
-  box-shadow: 0 0 8px rgba(0,0,0,0.8);
+.ba-divider::after {
+  content: "\\2194";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  color: #333;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: bold 20px Arial, sans-serif;
 }
-.slider-range::-moz-range-thumb {
-  width: 4px;
-  height: 600px;
-  background: #ffffff;
-  cursor: ew-resize;
-  box-shadow: 0 0 8px rgba(0,0,0,0.8);
-  border: none;
-}
-.labels-container {
+.ba-divider:focus-visible::after { box-shadow: 0 0 0 3px #4c9ffe; }
+.ba-labels {
   position: absolute;
   bottom: 15px;
+  left: 0;
   width: 100%;
   display: flex;
   justify-content: space-between;
   padding: 0 30px;
   box-sizing: border-box;
   pointer-events: none;
-  color: white;
-  font-family: Arial, sans-serif;
-  font-size: 1.2em;
-  font-weight: bold;
+  color: #fff;
+  font: bold 1.2em Arial, sans-serif;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
   z-index: 5;
 }
 </style>
 
-<div class="slider-container">
-  <img src="https://hips.hearstapps.com/es.h-cdn.co/cades/contenidos/60899/williams-renault-fw14b-mansell-01.jpg" class="slider-img" alt="Williams FW14B">
-  
-  <img src="/home/igor91ac/Descargas/Gemini_Generated_Image_ui1vo6ui1vo6ui1v.jpeg" class="img-overlay" id="imgOverlay" alt="Red Bull RB17">
-  
-  <div class="labels-container">
+<div class="ba-container">
+  <img src="__RIGHT__" class="ba-img" alt="Williams FW14B" draggable="false">
+  <img src="__LEFT__"  class="ba-img ba-overlay" alt="Red Bull RB17" draggable="false">
+  <div class="ba-labels">
     <span>Red Bull RB17</span>
     <span>Williams FW14B</span>
   </div>
-
-  <input type="range" min="0" max="100" value="50" class="slider-range" id="sliderRange">
+  <div class="ba-divider" role="slider" tabindex="0"
+       aria-label="Comparar imágenes" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"></div>
 </div>
 
 <script>
-  const slider = document.getElementById("sliderRange");
-  const overlay = document.getElementById("imgOverlay");
+(function () {
+  document.querySelectorAll(".ba-container").forEach(function (box) {
+    if (box.dataset.ready) return;
+    box.dataset.ready = "1";
+    const divider = box.querySelector(".ba-divider");
+    let pct = 50;
 
-  slider.addEventListener("input", function() {
-    const clipVal = 100 - slider.value;
-    overlay.style.clipPath = `inset(0 ${clipVal}% 0 0)`;
+    function setPct(v) {
+      pct = Math.max(0, Math.min(100, v));
+      box.style.setProperty("--pos", pct + "%");
+      divider.setAttribute("aria-valuenow", Math.round(pct));
+    }
+    function fromEvent(e) {
+      const r = box.getBoundingClientRect();
+      setPct((e.clientX - r.left) / r.width * 100);
+    }
+
+    box.addEventListener("pointerdown", function (e) {
+      box.setPointerCapture(e.pointerId);
+      fromEvent(e);
+    });
+    box.addEventListener("pointermove", function (e) {
+      if (box.hasPointerCapture(e.pointerId)) fromEvent(e);
+    });
+    box.addEventListener("pointerup",     function (e) { box.releasePointerCapture(e.pointerId); });
+    box.addEventListener("pointercancel", function (e) { box.releasePointerCapture(e.pointerId); });
+
+    divider.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowLeft")  { setPct(pct - 2); e.preventDefault(); }
+      if (e.key === "ArrowRight") { setPct(pct + 2); e.preventDefault(); }
+    });
+
+    setPct(50);
   });
+})();
 </script>
 """
 
+html_code = html_template.replace("__LEFT__", img_left).replace("__RIGHT__", img_right)
 display(HTML(html_code))
 ```
 
@@ -186,12 +236,29 @@ display(HTML(html_code))
 
 Newey cambió radicalmente la morfología de la F1 al tratar el coche como un sistema de datos holístico, donde masa y dinámica de fluidos interactúan sin descanso.
 
-Con el **March 881 (Leyton House)**, demostró empíricamente que la reducción drástica del espacio interior mejoraba el flujo volumétrico. Introdujo el chasis en forma de "V" y elevó la caja de pedales para independizar el flujo del alerón delantero del morro. Las tolerancias analíticas eran tan extremas que requirieron alteraciones asimétricas del monocasco en fibra de carbono simplemente para que los nudillos de pilotos como Ivan Capelli pudieran accionar la caja de cambios.
+::: {.columns}
+
+::: {.column width="56%"}
+
+Con el **March 881 (Leyton House, 1988)**, demostró empíricamente que la reducción drástica del espacio interior mejoraba el flujo volumétrico. Hasta ese momento, las cabinas (cockpits) de los F1 eran relativamente espaciosas y cuadradas para dar comodidad al piloto y acomodar los componentes. Newey entendió que la sección transversal del coche actuaba como un obstáculo para el aire. Al reducir al mínimo absoluto el espacio interior (encogiendo el chasis alrededor del cuerpo del piloto), disminuyó la resistencia al avance (drag) y canalizó un volumen de aire mucho mayor y más limpio hacia la parte trasera y el difusor, aumentando la carga aerodinámica (downforce).
+
+:::
+
+::: {.column width="3%"}
+:::
+
+::: {.column width="41%"}
+
+![March 881 (Leyton House, 1988)](https://gpcars4sale.com/wp-content/uploads/LeytonHouseMarch881_klein-16-1200x801.jpg)
+
+:::
+:::
+Introdujo el chasis en forma de "V" y elevó la caja de pedales para independizar el flujo del alerón delantero del morro. Las tolerancias analíticas eran tan extremas que requirieron alteraciones asimétricas del monocasco en fibra de carbono simplemente para que los nudillos de pilotos como Ivan Capelli pudieran accionar la caja de cambios.
 
 
 ## Impacto en el Deporte II: La revolución del algoritmo (FW14B)
 
-El **Williams FW14B** (1992) representa el punto de inflexión definitivo donde el *software* dominó al *hardware*. Newey integró un sistema de suspensión activa controlada por una centralita electrónica que bombeaba fluido a actuadores hidráulicos mediante válvulas proporcionales Moog. 
+El **Williams FW14B** (1992) representa el punto de inflexión definitivo donde el *software* dominó al *hardware*. Hasta ese momento, el comportamiento de un coche dependía de su hardware pasivo (muelles, amortiguadores y barras estabilizadoras).Newey integró un sistema de suspensión activa controlada por una centralita electrónica que bombeaba fluido a actuadores hidráulicos mediante válvulas proporcionales Moog. Así un microprocesador decidía en cada milisegundo qué altura debía tener cada rueda, abriendo o cerrando el paso del fluido hidráulico milimétricamente para subir, bajar, endurecer o ablandar la suspensión de cada rueda de forma independiente y casi instantánea. 
 
 Este algoritmo absorbía los datos de las fuerzas G laterales y longitudinales, corrigiendo en milisegundos la plataforma del coche para mantener una altura de manejo (*ride-height*) óptima en todo momento. Esta innovación analítica anuló la transferencia de masas y reescribió las reglas del deporte, logrando un dominio tan abrumador que la FIA terminó prohibiendo las ayudas electrónicas.
 
@@ -200,8 +267,9 @@ Este algoritmo absorbía los datos de las fuerzas G laterales y longitudinales, 
 
 El análisis de datos no está exento de colapsos cuando los modelos teóricos difieren de la física real. 
 
-* **Williams FW16 (1994):** Tras la prohibición algorítmica, el modelo pasivo sufrió de separación de flujos. La constricción entre el suelo y los pontones frontales al frenar causaba un *stall* violento del difusor trasero, evidenciando las limitaciones de un diseño que dependía de la corrección informática abolida.
-* **McLaren MP4-18 y Red Bull RB3:** Proyectos posteriores demostraron que el modelado extremo en CFD (como el chasis de "doble quilla" o cajas de cambio ultra-compactas) podía generar fallos catastróficos no previstos en los simuladores, como la ruptura prematura de vórtices bajo guiñada, incendios sistémicos por estrés térmico y fricción de transmisión.
+* **Williams FW16 (1994):** Tras la prohibición algorítmica, el modelo pasivo sufrió de separación de flujos. La constricción entre el suelo y los pontones frontales al frenar causaba un *stall* violento del difusor trasero, evidenciando las limitaciones de un diseño que dependía de la corrección informática abolida. Sin la informática corrigiendo la altura del coche, al frenar antes de una curva, la inercia hacía que el morro se hundiera y la parte trasera se elevara de forma abrupta. Esto alteraba radicalmente la distancia entre el suelo del coche y el asfalto, el difusor dejaba de generar agarre de golpe y el eje trasero perdía toda la adherencia de forma impredecible y violenta.
+
+* **McLaren MP4-18 y Red Bull RB3:** Proyectos posteriores demostraron que el modelado extremo en Mecánica de Fluidos Computacional (CFD) y tunel de viento, como el chasis de "doble quilla" o cajas de cambio ultra-compactas, podía generar fallos catastróficos no previstos en los simuladores, como la ruptura prematura de vórtices bajo guiñada, incendios sistémicos por estrés térmico y fricción de transmisión.
 
 
 ## Influencia en el Análisis Moderno
@@ -211,7 +279,7 @@ El legado de Newey sentó los pilares del *Sports Analytics* actual en el automo
 ::: {.columns}
 
 ::: {.column width="55%"}
-* **CFD y Gemelos Digitales:** Precursor absoluto de las dinámicas de fluidos computacionales al exprimir la correlación matemática en el túnel de viento.
+* **CFD y Gemelos Digitales:** Fue pionero en exigir una triangulación analítica perfecta entre tres entornos: la simulación virtual (CFD), el túnel de viento (física a escala) y la telemetría en pista (física real).
 * **Telemetría y Set-up dinámico:** Incorporó ajustes en el volante para que el piloto optimizara hiperparámetros (reparto de pesos, altura) en tiempo real, transformándolo en un analista activo.
 * **Estrategia Estocástica Moderna:** Hoy en día, estructuras como Aston Martin utilizan la base teórica de validación de Newey para ejecutar simulaciones de Montecarlo. Si los datos del túnel fallan en correlacionarse con la carga real, los equipos lo compensan analíticamente.
 :::
