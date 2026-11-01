@@ -50,13 +50,14 @@ format:
         </style>
 csl: https://www.zotero.org/styles/apa #Referencias en APA
 nocite: "@*" #Esto obliga al qmd a poner las referencias en la bibliografía son citarlas en el texto
+#El {translate="no"} de algunas líneas es para que google no lo traduzca al abrir el html
 references:
   - id: mancebo2024
     type: webpage
     author:
       - family: Mancebo
         given: Adrián 
-    title: "March 881, la historia de la primera genialidad de Adrian Newey en la F1"
+    title: "[March 881]{translate='no'}, la historia de la primera genialidad de Adrian Newey en la F1"
     publisher: "Auto Bild"
     issued:
       - year: 2024
@@ -66,7 +67,7 @@ references:
     author:
       - family: Newey
         given: Adrian 
-    title: "How to build a car"
+    title: "[How to build a car]{translate='no'}"
     publisher: "HarperCollinsPublishers"
     issued:
       - year: 2017
@@ -91,7 +92,7 @@ jupyter: python3
 **Deporte:** Automovilismo (Fórmula 1, IndyCar, IMSA).  
 **Ámbito analítico:** Simulación aerodinámica, telemetría y algoritmos de control de chasis.  
 
-![](https://static.motor.es/fotos-noticias/2026/07/fracasos-newey-f1-similitudes-diferencias-mclaren-mp418-aston-martin-amr26-2026115297-1784194058_6.jpg)
+![Newey en McLaren y en Aston Martin. Foto de motor.es](https://static.motor.es/fotos-noticias/2026/07/fracasos-newey-f1-similitudes-diferencias-mclaren-mp418-aston-martin-amr26-2026115297-1784194058_6.jpg)
 
 
 ## Contexto: La F1 empírica antes de los datos
@@ -99,7 +100,7 @@ jupyter: python3
 Durante los años 70 y gran parte de los 80, el diseño dependía en gran medida de la **genialidad e intuición** de diseñadores individuales como Colin Chapman o el propio Adrian Newey en sus inicios, bajo un método dominante de _construir, probar y corregir_. Las decisiones sobre la puesta a punto se tomaban basándose principalmente en los tiempos por vuelta marcados a mano y en el feedback subjetivo del piloto. Asimismo, no existía el análisis de datos en tiempo real ni la capacidad de cruzar variables en un ordenador para comparar, por ejemplo, la aceleración lateral con la presión de freno y la altura del chasis.
 
 
-Mientras que los años 70 el desarrollo estuvo basado en el empirismo y la aerodinámica se probaba directamente en pista añadiendo o quitando piezas sin sensores digitales a bordo, la década de 1980 marcó el inicio del cambio de paradigma. A mediados de esa década, escuderías como Williams o McLaren empezaron a **instalar dataloggers primitivos** que almacenaban información en memoria interna para descargarla por cable en boxes, iniciando así la medición cuantitativa de parámetros básicos como revoluciones por minuto, presiones, temperaturas y velocidad de las ruedas.
+Mientras que en estas décadas el desarrollo estuvo basado en el empirismo y la aerodinámica se probaba directamente en pista añadiendo o quitando piezas sin sensores digitales a bordo, la década de 1980 marcó el inicio del cambio de paradigma. A mediados de esa década, escuderías como Williams o McLaren empezaron a **instalar dataloggers primitivos** que almacenaban información en memoria interna para descargarla por cable en boxes, iniciando así la medición cuantitativa de parámetros básicos como revoluciones por minuto, presiones, temperaturas y velocidad de las ruedas.
 
 
 ## Biografía breve: De la aeronáutica a la pista
@@ -311,7 +312,7 @@ Con el **March 881 (Leyton House, 1988)**, demostró empíricamente que la reduc
 
 ::: {.column width="41%"}
 
-![March 881 (Leyton House, 1988)](https://gpcars4sale.com/wp-content/uploads/LeytonHouseMarch881_klein-16-1200x801.jpg)
+![[March 881]{translate="no"} (Leyton House, 1988)](https://gpcars4sale.com/wp-content/uploads/LeytonHouseMarch881_klein-16-1200x801.jpg)
 
 :::
 :::
