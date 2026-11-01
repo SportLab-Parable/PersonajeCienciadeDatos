@@ -142,60 +142,65 @@ def img_to_data_uri(path):
 img_left  = img_to_data_uri("/home/igor91ac/Descargas/Gemini_Generated_Image_ui1vo6ui1vo6ui1v.jpeg")
 img_right = "https://hips.hearstapps.com/es.h-cdn.co/cades/contenidos/60899/williams-renault-fw14b-mansell-01.jpg"
 
-html_template = """
+ASPECT = "16 / 9"
+FIT    = "cover"
+LABEL_LEFT, LABEL_RIGHT = "Red Bull RB17", "Williams FW14B"
+
+html_template = r"""
 <style>
-.ba-container {
+.ba-frame {
+  width: 100%;
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 8px;
+  box-sizing: border-box;
+  background: #111;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.35);
+}
+.ba-stage {
   --pos: 50%;
   position: relative;
   width: 100%;
-  max-width: 900px;
-  aspect-ratio: 16 / 9;
-  margin: 20px auto;
+  aspect-ratio: __ASPECT__;
   overflow: hidden;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  border-radius: 6px;
+  background: #000;
+  cursor: ew-resize;
   user-select: none;
   -webkit-user-select: none;
   touch-action: pan-y;
-  cursor: ew-resize;
 }
-.ba-img {
+.ba-layer {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: __FIT__;
   pointer-events: none;
-  -webkit-user-drag: none;
 }
-.ba-overlay {
-  clip-path: inset(0 calc(100% - var(--pos)) 0 0);
-}
+.ba-top { clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
 .ba-divider {
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: 0; bottom: 0;
   left: var(--pos);
-  width: 4px;
-  transform: translateX(-50%);
+  width: 3px;
+  margin-left: -1.5px;
   background: #fff;
-  box-shadow: 0 0 8px rgba(0,0,0,0.8);
+  box-shadow: 0 0 6px rgba(0,0,0,.7);
   z-index: 6;
   outline: none;
 }
 .ba-divider::after {
-  content: "\\2194";
+  content: "\2194";
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 40px;
-  height: 40px;
+  top: 50%; left: 50%;
+  width: 40px; height: 40px;
   transform: translate(-50%, -50%);
   background: #fff;
   color: #333;
   border-radius: 50%;
-  box-shadow: 0 0 8px rgba(0,0,0,0.6);
+  box-shadow: 0 0 8px rgba(0,0,0,.6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -204,72 +209,87 @@ html_template = """
 .ba-divider:focus-visible::after { box-shadow: 0 0 0 3px #4c9ffe; }
 .ba-labels {
   position: absolute;
-  bottom: 15px;
-  left: 0;
-  width: 100%;
+  left: 0; right: 0; bottom: 14px;
   display: flex;
   justify-content: space-between;
-  padding: 0 30px;
+  padding: 0 24px;
   box-sizing: border-box;
   pointer-events: none;
-  color: #fff;
-  font: bold 1.2em Arial, sans-serif;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
   z-index: 5;
+  color: #fff;
+  font: bold 1.1em Arial, sans-serif;
+  text-shadow: 2px 2px 4px rgba(0,0,0,.85);
 }
 </style>
 
-<div class="ba-container">
-  <img src="__RIGHT__" class="ba-img" alt="Williams FW14B" draggable="false">
-  <img src="__LEFT__"  class="ba-img ba-overlay" alt="Red Bull RB17" draggable="false">
-  <div class="ba-labels">
-    <span>Red Bull RB17</span>
-    <span>Williams FW14B</span>
+<div class="ba-frame">
+  <div class="ba-stage">
+    <div class="ba-layer" role="img" aria-label="__LR__" style="background-image:url('__RIGHT__')"></div>
+    <div class="ba-layer ba-top" role="img" aria-label="__LL__" style="background-image:url('__LEFT__')"></div>
+    <div class="ba-labels"><span>__LL__</span><span>__LR__</span></div>
+    <div class="ba-divider" role="slider" tabindex="0"
+         aria-label="Comparar imágenes" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"></div>
   </div>
-  <div class="ba-divider" role="slider" tabindex="0"
-       aria-label="Comparar imágenes" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"></div>
 </div>
 
 <script>
 (function () {
-  document.querySelectorAll(".ba-container").forEach(function (box) {
-    if (box.dataset.ready) return;
-    box.dataset.ready = "1";
-    const divider = box.querySelector(".ba-divider");
-    let pct = 50;
+  if (window.__baSliderInit) return;      // se registra una sola vez por página
+  window.__baSliderInit = true;
 
-    function setPct(v) {
-      pct = Math.max(0, Math.min(100, v));
-      box.style.setProperty("--pos", pct + "%");
-      divider.setAttribute("aria-valuenow", Math.round(pct));
-    }
-    function fromEvent(e) {
-      const r = box.getBoundingClientRect();
-      setPct((e.clientX - r.left) / r.width * 100);
-    }
+  let active = null;
 
-    box.addEventListener("pointerdown", function (e) {
-      box.setPointerCapture(e.pointerId);
-      fromEvent(e);
-    });
-    box.addEventListener("pointermove", function (e) {
-      if (box.hasPointerCapture(e.pointerId)) fromEvent(e);
-    });
-    box.addEventListener("pointerup",     function (e) { box.releasePointerCapture(e.pointerId); });
-    box.addEventListener("pointercancel", function (e) { box.releasePointerCapture(e.pointerId); });
+  function setPct(stage, v) {
+    const pct = Math.max(0, Math.min(100, v));
+    stage.style.setProperty("--pos", pct + "%");
+    const d = stage.querySelector(".ba-divider");
+    if (d) d.setAttribute("aria-valuenow", Math.round(pct));
+    stage._pct = pct;
+  }
+  function fromEvent(stage, e) {
+    const r = stage.getBoundingClientRect();
+    setPct(stage, (e.clientX - r.left) / r.width * 100);
+  }
+  function stageOf(el) {
+    return el && el.closest ? el.closest(".ba-stage") : null;
+  }
 
-    divider.addEventListener("keydown", function (e) {
-      if (e.key === "ArrowLeft")  { setPct(pct - 2); e.preventDefault(); }
-      if (e.key === "ArrowRight") { setPct(pct + 2); e.preventDefault(); }
-    });
+  document.addEventListener("pointerdown", function (e) {
+    const s = stageOf(e.target);
+    if (!s) return;
+    active = s;
+    try { s.setPointerCapture(e.pointerId); } catch (_) {}
+    fromEvent(s, e);
+    e.preventDefault();
+  });
+  document.addEventListener("pointermove", function (e) {
+    if (active) fromEvent(active, e);
+  });
+  ["pointerup", "pointercancel"].forEach(function (t) {
+    document.addEventListener(t, function () { active = null; });
+  });
 
-    setPct(50);
+  document.addEventListener("keydown", function (e) {
+    const s = stageOf(e.target);
+    if (!s || !e.target.classList.contains("ba-divider")) return;
+    const cur = (s._pct === undefined) ? 50 : s._pct;
+    if (e.key === "ArrowLeft")  { setPct(s, cur - 2); e.preventDefault(); }
+    if (e.key === "ArrowRight") { setPct(s, cur + 2); e.preventDefault(); }
+    if (e.key === "Home")       { setPct(s, 0);   e.preventDefault(); }
+    if (e.key === "End")        { setPct(s, 100); e.preventDefault(); }
   });
 })();
 </script>
 """
 
-html_code = html_template.replace("__LEFT__", img_left).replace("__RIGHT__", img_right)
+html_code = (html_template
+    .replace("__ASPECT__", ASPECT)
+    .replace("__FIT__", FIT)
+    .replace("__LEFT__", img_left)
+    .replace("__RIGHT__", img_right)
+    .replace("__LL__", LABEL_LEFT)
+    .replace("__LR__", LABEL_RIGHT))
+
 display(HTML(html_code))
 ```
 
